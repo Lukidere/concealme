@@ -23,12 +23,14 @@ pub fn rand_mac() -> String {
 }
 
 pub fn mac_from_input() -> String {
+    println!("Provide 3 octets of your desired mac address");
+    println!("It should have this format FF:FF:FF where FF are letters from A to F");
     let regex = Regex::new(r"([0-9a-fA-F]{2}):([0-9a-fA-F]{2}):([0-9a-fA-F]{2})").unwrap();
     let mut mac_do_sprawdzenia = String::new();
     io::stdin()
         .read_line(&mut mac_do_sprawdzenia)
         .expect("Couldnt read input");
-    mac_do_sprawdzenia.trim();
+    let _ = mac_do_sprawdzenia.trim();
     if let Some(captures) = regex.captures(&mac_do_sprawdzenia) {
         captures.iter().for_each(|capture| println!("{capture:#?}"));
     }
@@ -40,10 +42,11 @@ struct Dana {
     Assignment: String,
 }
 pub fn mac_from_list(path: &str) -> Result<String> {
-    // let macs = "https://standards-oui.ieee.org/oui/oui.csv";
+    let content = fs::read_to_string(path)?;
+    // uncomment these if you know what you are doing
+    // let macs = "https://standards-oui.ieee.org/oui/oui.csv"; |
     // let response = get(macs)?;
     // let content = response.text()?;
-    let content = fs::read_to_string(path)?;
     let mut reader = ReaderBuilder::new().from_reader(content.as_bytes());
     let data: Result<Vec<Dana>, csv::Error> = reader
         .deserialize()
