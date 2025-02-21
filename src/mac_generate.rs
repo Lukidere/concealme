@@ -16,6 +16,9 @@ pub fn rand_mac() -> String {
             format!("{:X}", thread_rng().gen_range(0..16))
                 .chars()
                 .next()
+                .unwrap()
+                .to_lowercase()
+                .next()
                 .unwrap(),
         );
     }
@@ -40,6 +43,28 @@ pub fn mac_from_input() -> String {
 #[derive(Serialize, Deserialize)]
 struct Dana {
     Assignment: String,
+}
+pub fn mac_from_net() -> Result<String> {
+    let macs = "https://standards-oui.ieee.org/oui/oui.csv";
+    let response = get(macs)?;
+    let content = response.text()?;
+    let mut reader = ReaderBuilder::new().from_reader(content.as_bytes());
+    let data: Result<Vec<Dana>, csv::Error> = reader
+        .deserialize()
+        .map(|result| {
+            result.map(|mut line: Dana| {
+                line.Assignment.insert(2, ':');
+                line.Assignment.insert(5, ':');
+                line
+            })
+        })
+        .collect();
+    let data = data.unwrap();
+    Ok(data
+        .get(thread_rng().gen_range(0..data.len()))
+        .unwrap()
+        .Assignment
+        .clone())
 }
 pub fn mac_from_list(path: &str) -> Result<String> {
     let content = fs::read_to_string(path)?;
