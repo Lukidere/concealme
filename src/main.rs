@@ -15,7 +15,7 @@ fn main() {
         let args_parsed = Command::new("conceal_me")
         .version("1.0")
         .author("dhmnztr")
-        .about("mac changer but useful")
+        .about("useful mac spoofer")
         .arg(
             Arg::new("first")
                 .short('f')
