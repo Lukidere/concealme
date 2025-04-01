@@ -28,16 +28,18 @@ pub fn rand_mac() -> String {
 pub fn mac_from_input() -> String {
     println!("Provide 3 octets of your desired mac address");
     println!("It should have this format FF:FF:FF where FF are letters from A to F");
-    let regex = Regex::new(r"([0-9a-fA-F]{2}):([0-9a-fA-F]{2}):([0-9a-fA-F]{2})").unwrap();
+    let regex = Regex::new(r"[a-fA-F]{2}:[a-fA-F]{2}:[a-fA-F]{2}").unwrap();
     let mut mac_do_sprawdzenia = String::new();
     io::stdin()
         .read_line(&mut mac_do_sprawdzenia)
         .expect("Couldnt read input");
     let _ = mac_do_sprawdzenia.trim();
     if let Some(captures) = regex.captures(&mac_do_sprawdzenia) {
-        captures.iter().for_each(|capture| println!("{capture:#?}"));
+        captures
+            .iter()
+            .for_each(|capture| println!("Proper input!"));
     }
-    return String::from("Cos");
+    return mac_do_sprawdzenia;
 }
 
 #[derive(Serialize, Deserialize)]
