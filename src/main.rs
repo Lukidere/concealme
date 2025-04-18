@@ -67,7 +67,7 @@ fn main() {
             Some(val) => val,
             _ => unreachable!()
         };
-        let mut first_value = match first_value {
+        let first_half = match first_value {
             value if value.starts_with("list=") => mac_from_list(&value[5..]).unwrap(),
             value if value == "rng" => rand_mac(),
             value if value == "input" => mac_from_input(),
@@ -84,8 +84,7 @@ fn main() {
             value if value == "input" => mac_from_input(),
             _ => unreachable!(),
         };
-        let first_value = "0".to_owned() + &first_value[1..];
-        let mac = format!("{first_value}:{second_half}");
+        let mac = format!("{first_half}:{second_half}");
         setting_the_mac(mac, interface.to_owned(), interfaces);
         }
     } else {
